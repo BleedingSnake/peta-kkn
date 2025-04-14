@@ -1,32 +1,374 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Peta Wisata Ramah Lansia</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-  crossorigin=""/>
-
-  <style>
-    #map { height: 100vh; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Wisata</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    
+    <!-- Marker Cluster CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" />
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+        
+        .control-panel {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+        }
+        
+        .filter-group {
+            margin-bottom: 10px;
+        }
+        
+        .filter-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .filter-item {
+            margin-right: 10px;
+        }
+        
+        .popup-content {
+            max-width: 300px;
+        }
+        
+        .popup-content img {
+            width: 100%;
+            max-height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .popup-content h3 {
+            margin: 0 0 8px 0;
+        }
+        
+        .popup-content p {
+            margin: 5px 0;
+        }
+        
+        .category-icon {
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .highlight {
+            font-weight: bold;
+            color: #0078A8;
+        }
+        
+        #coordinates-display {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .zoom-controls {
+            margin-top: 10px;
+        }
+        
+        .zoom-controls button {
+            margin-right: 5px;
+        }
+        
+        #add-marker-btn {
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        #add-marker-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-  <div id="map"></div>
-
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script>
-    var map = L.map('map').setView([-7.797068, 110.370529], 15); // Koordinat bisa diganti
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap'
-    }).addTo(map);
-
-    L.marker([-7.797068, 110.370529]).addTo(map)
-      .bindPopup('<b>Posko KKN</b><br>Lokasi utama.')
-      .openPopup();
-  </script>
+    <div id="map"></div>
+    
+    <div class="control-panel">
+        <h3>Travel Map</h3>
+        
+        <div class="filter-group">
+            <label class="filter-label">Filter berdasarkan Kategori:</label>
+            <div>
+                <label class="filter-item">
+                    <input type="checkbox" class="category-filter" value="landmark" checked> Landmark
+                </label>
+                <label class="filter-item">
+                    <input type="checkbox" class="category-filter" value="nature" checked> Wisata Alam
+                </label>
+                <label class="filter-item">
+                    <input type="checkbox" class="category-filter" value="culture" checked> Wisata Budaya
+                </label>
+                <label class="filter-item">
+                    <input type="checkbox" class="category-filter" value="food" checked> Wiata Kuliner
+                </label>
+            </div>
+        </div>
+        
+        <div class="filter-group">
+            <label class="filter-label">Kontrol Map:</label>
+            <div id="map-center">Lat: -7.7334, Lng: 110.2503</div>
+            <div id="current-zoom">Zoom Level: 14</div>
+            <button id="reset-view">Reset View Map</button>
+            <div class="zoom-controls">
+                <button id="zoom-in">Zoom In</button>
+                <button id="zoom-out">Zoom Out</button>
+            </div>
+            <div>
+                <select id="zoom-level">
+                    <option value="2">World View (2)</option>
+                    <option value="5">Continent View (5)</option>
+                    <option value="8">Country View (8)</option>
+                    <option value="10">Region View (10)</option>
+                    <option value="13">City View (13)</option>
+                    <option value="16">Street View (16)</option>
+                </select>
+                <button id="set-zoom">Set Zoom</button>
+            </div>
+        </div>
+        
+        <div class="filter-group">
+            <label class="filter-label">Current Map Center:</label>
+            <div id="map-center">Lat: 0, Lng: 0</div>
+            <div id="current-zoom">Zoom Level: 3</div>
+        </div>
+        
+        <button id="add-marker-btn">Tambahkan Penanda</button>
+        
+        <div>
+            <small>Klik peta untuk melihat koordinat. Klik penanda untuk melihat detail lokasi</small>
+        </div>
+    </div>
+    
+    <div id="coordinates-display">
+        Klik peta untuk melihat koordinat
+    </div>
+    
+    <!-- Leaflet JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    
+    <!-- Marker Cluster JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+    
+    <script>
+        // Initialize
+        const map = L.map('map').setView([-7.7334, 110.2503], 14);
+        
+        // (OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+        }).addTo(map);
+        
+        // map scaling
+        L.control.scale({imperial: true, metric: true, position: 'bottomright'}).addTo(map);
+        
+        // kluster map
+        const markers = L.markerClusterGroup();
+        
+        // Lokasi sampel
+        const locations = [
+            { 
+                name: "Sub-unit 4",
+                category: "food",
+                description: "Historic food market in Madrid, Spain with gourmet tapas and fresh produce.",
+                lat: -7.7170438141878925, 
+                lng: 110.24018707976057,
+                image: "/api/placeholder/400/300",
+                rating: 4.4,
+                visitTips: "Busy during lunch hours. Try the fresh seafood and Spanish wines."
+            },
+            {
+            name: "Sub-unit 3",
+                category: "food",
+                description: "Historic food market in Madrid, Spain with gourmet tapas and fresh produce.",
+                lat: -7.741944,
+                lng: 110.221944,
+                image: "/api/placeholder/400/300",
+                rating: 4.4,
+                visitTips: "Busy during lunch hours. Try the fresh seafood and Spanish wines."
+            }
+        ];
+        
+        // color for marker
+        const categoryColors = {
+            landmark: "#FF5733",
+            nature: "#33FF57",
+            culture: "#3357FF",
+            food: "#F3FF33",
+            custom: "#9933FF" // For user-added markers. Placeholder
+        };
+        
+        // Create a marker for each location
+        function addLocationsToMap() {
+            markers.clearLayers();
+            
+            // Get selected categories
+            const selectedCategories = Array.from(document.querySelectorAll('.category-filter:checked'))
+                .map(checkbox => checkbox.value);
+            
+            locations.forEach(location => {
+                if (selectedCategories.includes(location.category)) {
+                    // Create custom icon based on category
+                    const icon = L.divIcon({
+                        className: 'category-icon',
+                        html: `<div style="background-color: ${categoryColors[location.category]}">${location.category.charAt(0).toUpperCase()}</div>`,
+                        iconSize: [30, 30]
+                    });
+                    
+                    // Create marker with custom icon
+                    const marker = L.marker([location.lat, location.lng], {
+                        icon: icon,
+                        category: location.category
+                    });
+                    
+                    // Create popup content
+                    const popupContent = `
+                        <div class="popup-content">
+                            <img src="${location.image}" alt="${location.name}">
+                            <h3>${location.name}</h3>
+                            <p>${location.description}</p>
+                            <p><span class="highlight">Rating:</span> ${location.rating} / 5</p>
+                            <p><span class="highlight">Category:</span> ${location.category.charAt(0).toUpperCase() + location.category.slice(1)}</p>
+                            <p><span class="highlight">Tips:</span> ${location.visitTips}</p>
+                            <p><span class="highlight">Coordinates:</span> ${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}</p>
+                        </div>
+                    `;
+                    
+                    // Bind popup to marker
+                    marker.bindPopup(popupContent);
+                    
+                    // Add marker to the cluster group
+                    markers.addLayer(marker);
+                }
+            });
+            
+            // Add the marker cluster group to the map
+            map.addLayer(markers);
+        }
+        
+        // Initialize map with markers
+        addLocationsToMap();
+        
+        // Add event listeners to category filters
+        document.querySelectorAll('.category-filter').forEach(checkbox => {
+            checkbox.addEventListener('change', addLocationsToMap);
+        });
+        
+        // Show coordinates when clicking on the map
+        map.on('click', function(e) {
+            const lat = e.latlng.lat.toFixed(6);
+            const lng = e.latlng.lng.toFixed(6);
+            document.getElementById('coordinates-display').innerHTML = `Koordinat diklik: Lat ${lat}, Lng ${lng}`;
+        });
+        
+        // Add marker at clicked location if button is active
+        let addMarkerMode = false;
+        document.getElementById('add-marker-btn').addEventListener('click', function() {
+            addMarkerMode = !addMarkerMode;
+            this.textContent = addMarkerMode ? 'Click on Map to Add Marker (Active)' : 'Add Marker at Click Location';
+            this.style.backgroundColor = addMarkerMode ? '#ff4500' : '#4CAF50';
+        });
+        
+        map.on('click', function(e) {
+            if (addMarkerMode) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+                
+                // Create a prompt for landmark name
+                const name = prompt("Enter a name for this location:", "New Location");
+                if (name) {
+                    const category = "custom";
+                    const description = prompt("Enter a description:", "Custom location");
+                    
+                    // Add to locations array
+                    locations.push({
+                        name: name,
+                        category: category,
+                        description: description,
+                        lat: lat,
+                        lng: lng,
+                        image: "/api/placeholder/400/300",
+                        rating: 5.0,
+                        visitTips: "Custom location added by user."
+                    });
+                    
+                    // Refresh map
+                    addLocationsToMap();
+                    
+                    // Reset add marker mode
+                    addMarkerMode = false;
+                    const btn = document.getElementById('add-marker-btn');
+                    btn.textContent = 'Add Marker at Click Location';
+                    btn.style.backgroundColor = '#4CAF50';
+                }
+            }
+        });
+        
+        // Update center coordinates display when map moves
+        map.on('moveend', function() {
+            const center = map.getCenter();
+            document.getElementById('map-center').innerHTML = `Lat: ${center.lat.toFixed(4)}, Lng: ${center.lng.toFixed(4)}`;
+            document.getElementById('current-zoom').innerHTML = `Zoom Level: ${map.getZoom()}`;
+        });
+        
+        // Add zoom controls
+        document.getElementById('zoom-in').addEventListener('click', function() {
+            map.zoomIn();
+        });
+        
+        document.getElementById('zoom-out').addEventListener('click', function() {
+            map.zoomOut();
+        });
+        
+        document.getElementById('set-zoom').addEventListener('click', function() {
+            const zoomLevel = parseInt(document.getElementById('zoom-level').value);
+            map.setZoom(zoomLevel);
+        });
+        
+        // Reset map view button
+        document.getElementById('reset-view').addEventListener('click', function() {
+            map.setView([40, 0], 3);
+        });
+    </script>
 </body>
 </html>

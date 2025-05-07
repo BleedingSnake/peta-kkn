@@ -77,7 +77,7 @@
             text-align: center;
             border-radius: 50%;
             font-weight: bold;
-            color: white;
+            color: rgb(0, 0, 0);
             font-size: 12px;
         }
         
@@ -130,16 +130,19 @@
             <label class="filter-label">Filter berdasarkan Kategori:</label>
             <div>
                 <label class="filter-item">
-                    <input type="checkbox" class="category-filter" value="landmark" checked> Landmark
+                    <input type="checkbox" class="category-filter" value="Peternakan" checked> Peternakan
                 </label>
                 <label class="filter-item">
-                    <input type="checkbox" class="category-filter" value="nature" checked> Wisata Alam
+                    <input type="checkbox" class="category-filter" value="Kerajinan" checked> Kerajinan
                 </label>
                 <label class="filter-item">
-                    <input type="checkbox" class="category-filter" value="culture" checked> Wisata Budaya
+                    <input type="checkbox" class="category-filter" value="Budaya" checked> Budaya
                 </label>
                 <label class="filter-item">
-                    <input type="checkbox" class="category-filter" value="food" checked> Wiata Kuliner
+                    <input type="checkbox" class="category-filter" value="Kuliner" checked> Kuliner
+                </label>
+                <label class="filter-item">
+                    <input type="checkbox" class="category-filter" value="Pertanian" checked> Pertanian
                 </label>
             </div>
         </div>
@@ -207,35 +210,120 @@
         
         // INI BUAT NAMBAHIN LOKASI BTW
         const locations = [
-            { 
-                name: "Sub-unit 4",
-                category: "food",
-                description: "Historic food market in Madrid, Spain with gourmet tapas and fresh produce.",
-                lat: -7.7170438141878925, 
-                lng: 110.24018707976057,
-                image: "/api/placeholder/400/300",
-                rating: 4.4,
-                visitTips: "Busy during lunch hours. Try the fresh seafood and Spanish wines."
+            {
+                name: "Peternakan Domba BUMDes Sendangsari",
+                category: "Peternakan",
+                description: "Merupakan sebuah peternakan kambing milik kalurahan Sendangsari yang akan dikembangkan lanjut untuk menjadi salah satu potensi desa Sendangsari",
+                lat: -7.709406571732028,
+                lng: 110.256574,
+                image: "images/bumdes.jpeg"
             },
             {
-            name: "Sub-unit 3",
-                category: "food",
-                description: "Historic food market in Madrid, Spain with gourmet tapas and fresh produce.",
-                lat: -7.741944,
-                lng: 110.221944,
-                image: "/api/placeholder/400/300",
-                rating: 4.4,
-                visitTips: "Busy during lunch hours. Try the fresh seafood and Spanish wines."
+                name: "Deriji Craft",
+                category: "Kerajinan",
+                description: "Kerajinan mendong sejak tahun 2009 dari Plembon, Kalurahan Sendangsari",
+                lat: -7.714349752827013, 
+                lng: 110.24852235590566,
+                image: "images/deriji.jpeg"
+            },
+            {
+                name: "Anyaman Besek",
+                category: "Kerajinan",
+                description: "Anyaman tradisional yang dibuat secara manual oleh sekelompok ibu-ibu di rumah, memanfaatkan kearifan lokal dalam setiap anyamannya. Besek ini tak hanya berfungsi sebagai wadah makanan, tetapi juga mencerminkan nilai budaya dan keindahan estetika khas Indonesia yang sarat makna.",
+                lat: -7.712371580518698, 
+                lng: 110.2545294412846,
+                image: "images/besek.jpeg"
+            },
+            {
+                name: "Mochi dan Wingko Bu Ika",
+                category: "Kuliner",
+                description: "Makanan olahan yang terbuat dari tepung beras ketan,kelapa muda, dan gula. Diproduksi di salah satu rumah warga Jomboran, Kelurahan Sendangagung.",
+                lat: -7.739862713336016, 
+                lng: 110.21873196668757,
+                image: "/api/placeholder/400/300"
+            },
+            {
+                name: "Kerajinan Bambu",
+                category: "Kerajinan",
+                description: "Seni kerajinan tradisional dari anyaman bambu yang telah mendukung perekonomian sebagian masyarakat di Kelurahan Sendangagung. Di padukuhan Brajan, ini menjadi salah satu mata pencaharian utama dan telah berkembang menjadi Desa Wisata penghasil kerajinan",
+                lat: -7.73363851562155, 
+                lng: 110.23368882000571,
+                image: "/api/placeholder/400/300"
+            },
+            {
+                name: "Warung Bakmi Seleraku Pak Sukis",
+                category: "Kuliner",
+                description: "Warung makan Bakmi godok yang terletak di padukuhan minggir 3, kelurahan Sendangagung. Proses masaknya masih menggunakan cara tradisional, yaitu mie dimasak dengan menggunakan arang.",
+                lat: -7.717651109470254, 
+                lng: 110.2414527857697,
+                image: "/api/placeholder/400/300"
+            },
+            {
+                name: "Makanan Tradisional Geblek",
+                category: "Kuliner",
+                description: "Warung makan yang menjual makanan tradisional Geblek. Berasal dari daerah Kulonprogo, Purworejo, dan Wonosobo. Geblek terbuat dari tepung tapioka yang digoreng dengan bentuk angka delapan.",
+                lat: -7.7162530, 
+                lng: 110.2471593,
+                image: "/api/placeholder/400/300"
+            },
+            {
+                name: "Omah Minggir",
+                category: "Kuliner",
+                description: "Kafe berkonsep tradisional yang menawarkan suasana tenang dengan pemandangan sawah, cocok untuk menikmati hidangan lokal sambil bersantai di pedesaan.",
+                lat: -7.727804713909959, 
+                lng: 110.26385791144516,
+                image: "/api/placeholder/400/300"
+            },
+            {
+                name: "Gubug Makan Mang Engking Pusat",
+                category: "Kuliner",
+                description: "Restoran bernuansa pedesaan dengan saung-saung bambu di atas kolam, menyajikan hidangan khas Sunda seperti udang bakar madu dan gurame, cocok untuk makan bersama keluarga dalam suasana alami.",
+                lat: -7.720732744508779, 
+                lng: 110.26587359360549,
+                image: "/api/placeholder/400/300"
+            },
+            {
+                name: "Bakso Panjang & Mie Ayam Tresno Roso",
+                category: "Kuliner",
+                description: "Warung bakso dan mie ayam dengan ciri khas unik yaitu bakso berbentuk panjang menyerupai lontong, memberikan pengalaman kuliner yang berbeda.",
+                lat: -7.716244321951379, 
+                lng: 110.2673273117243,
+                image: "/api/placeholder/400/300"
+            },
+            {
+                name: "Himari Handycraft",
+                category: "Kerajinan",
+                description: "Pengrajin produk mendong yang cukup terkenal, berlokasi di Parakan Kulon, Sengdangsari. Menghadirkan kerajinan tangan khas dengan sentuhan kreatif dan nilai tradisional.",
+                lat: -7.711343678774689, 
+                lng: 110.25665462336198,
+                image: "/api/placeholder/400/300"
+            },
+            {
+                name: "Rumah Produksi Wingko Timik",
+                category: "Kuliner",
+                description: "Tempat produksi rumahan yang mengolah wingko, camilan tradisional berbahan dasar kelapa, dengan cita rasa autentik khas Jawa.",
+                lat: -7.725527520496527, 
+                lng: 110.2354000982332,
+                image: "/api/placeholder/400/300"
+            },
+            {
+                name: "Sweet Garden",
+                category: "Pertanian",
+                description: "Hutan Rakyat pola Agroforestry, Pengolahan pupuk organik, Perikanan dan Jasa Lingkungan",
+                lat: -7.718399,
+                lng: 110.232407,
+                image: "/api/placeholder/400/300"
             }
         ];
         
         // color for marker
         const categoryColors = {
-            landmark: "#FF5733",
-            nature: "#33FF57",
-            culture: "#3357FF",
-            food: "#F3FF33",
-            custom: "#9933FF" // For user-added markers. Placeholder
+            Peternakan: "orange",
+            Kerajinan: "blue",
+            Kuliner: "yellow",
+            Pertanian: "green",
+            Budaya: "purple",
+            custom: "red" // For user-added markers. Placeholder
         };
         
         // create a marker for each location
@@ -264,13 +352,11 @@
                     // Create popup content
                     const popupContent = `
                         <div class="popup-content">
-                            <img src="${location.image}" alt="${location.name}">
                             <h3>${location.name}</h3>
                             <p>${location.description}</p>
-                            <p><span class="highlight">Rating:</span> ${location.rating} / 5</p>
                             <p><span class="highlight">Category:</span> ${location.category.charAt(0).toUpperCase() + location.category.slice(1)}</p>
-                            <p><span class="highlight">Tips:</span> ${location.visitTips}</p>
                             <p><span class="highlight">Coordinates:</span> ${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}</p>
+                            <img src="${location.image}" alt="${location.name}">
                         </div>
                     `;
                     
@@ -327,9 +413,7 @@
                         description: description,
                         lat: lat,
                         lng: lng,
-                        image: "/api/placeholder/400/300",
-                        rating: 5.0,
-                        visitTips: "Custom location added by user."
+                        image: image,
                     });
                     
                     // Refresh map

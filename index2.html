@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peta Interaktif Wisata Kapanewon Minggir</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    
+    <!-- Marker Cluster CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        #map-container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        #map {
+            flex-grow: 1;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .side-panel {
+            width: 300px;
+            height: 100%;
+            background-color: white;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 2;
+        }
+        
+        .side-panel.collapsed {
+            transform: translateX(300px);
+        }
+        
+        .toggle-panel {
+            position: absolute;
+            right: 310px;
+            top: 10px;
+            background-color: white;
+            border: none;
+            border-radius: 5px;
+            width: 32px;
+            height: 32px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .toggle-panel.collapsed {
+            right: 10px;
+        }
+        
+        .toggle-panel i {
+            font-size: 16px;
+        }
+        
+        .panel-content {
+            padding: 15px;
+        }
+        
+        .panel-header {
+            border-bottom: 1px solid #e5e5e5;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .panel-header h2 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .panel-header p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .filter-group {
+            margin-bottom: 20px;
+        }
+        
+        .filter-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .filter-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .filter-item {
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f5;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-item:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .filter-item input {
+            display: none;
+        }
+        
+        .filter-item.active {
+            background-color: #2196F3;
+            color: white;
+        }
+        
+        .filter-item .category-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .map-controls {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e5e5;
+        }
+        
+        .control-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .control-row label {
+            margin-right: 10px;
+            font-weight: 600;
+            color: #333;
+            flex-shrink: 0;
+        }
+        
+        .zoom-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-size: 0.9rem;
+        }
+        
+        button:hover {
+            background-color: #0b7dda;
+        }
+        
+        select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            width: 100%;
+        }
+        
+        .add-marker-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e5e5;
+        }
+        
+        #add-marker-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #4CAF50;
+        }
+        
+        #add-marker-btn:hover {
+            background-color: #45a049;
+        }
+        
+        #add-marker-btn.active {
+            background-color: #ff4500;
+        }
+        
+        .coordinates-display {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            font-size: 0.9rem;
+            z-index: 2;
+            transition: transform 0.3s ease;
+        }
+        
+        .coordinates-display.hidden {
+            transform: translateY(100px);
+        }
+        
+        .location-cards {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .location-card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .location-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-image {
+            height: 120px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .card-category {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 8px;
+            border-radius: 3px;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .card-content {
+            padding: 12px;
+        }
+        
+        .card-content h3 {
+            margin-bottom: 5px;
+            font-size: 1rem;
+            color: #333;
+        }
+        
+        .card-content p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-rating {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        
+        .card-rating i {
+            color: #FFD700;
+            margin-right: 5px;
+        }
+        
+        .search-container {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .search-container input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 0.9rem;
+            padding-left: 35px;
+        }
+        
+        .search-container i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+        
+        .popup-content {
+            max-width: 300px;
+        }
+        
+        .popup-content img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .popup-content h3 {
+            margin: 0 0 8px 0;
+            color: #333;
+            font-size: 1.2rem;
+        }
+        
+        .popup-content p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .popup-content .highlight {
+            font-weight: 600;
+            color: #2196F3;
+        }
+        
+        .popup-content .video-preview {
+            margin-top: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #2196F3;
+        }
+        
+        .video-preview i {
+            font-size: 1.2rem;
+        }
+        
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .video-container {
+            width: 80%;
+            max-width: 800px;
+            position: relative;
+        }
+        
+        .video-container iframe {
+            width: 100%;
+            height: 450px;
+            border: none;
+        }
+        
+        .close-video {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        
+        .marker-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .add-location-form {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .form-header h2 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+        
+        .close-form {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 0.9rem;
+        }
+        
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .form-buttons button {
+            padding: 10px 15px;
+            font-size: 1rem;
+        }
+        
+        .cancel-btn {
+            background-color: #f44336;
+        }
+        
+        .submit-btn {
+            background-color: #4CAF50;
+        }
+        
+        @media (max-width: 768px) {
+            #map-container {
+                flex-direction: column;
+            }
+            
+            .side-panel {
+                width: 100%;
+                height: 50%;
+                box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            }
+            
+            .side-panel.collapsed {
+                transform: translateY(calc(100% - 40px));
+            }
+            
+            .toggle-panel {
+                top: auto;
+                bottom: calc(50% + 10px);
+                right: 10px;
+            }
+            
+            .toggle-panel.collapsed {
+                bottom: 50px;
+            }
+            
+            #map {
+                height: 50%;
+            }
+            
+            .coordinates-display {
+                bottom: calc(50% + 20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="map-container">
+        <div id="map"></div>
+        
+        <div class="side-panel">
+            <div class="panel-content">
+                <div class="panel-header">
+                    <h2>IPeta Interaktif</h2>
+                    <p>Temui dan kenali wisata dan UMKM lokal</p>
+                </div>
+                
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Search locations...">
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Filter berdasar kategori: </label>
+                    <div class="filter-items">
+                        <label class="filter-item active" data-category="landmark">
+                            <span class="category-dot" style="background-color: #FF5733;"></span>
+                            <input type="checkbox" class="category-filter" value="landmark" checked> Landmark
+                        </label>
+                        <label class="filter-item active" data-category="nature">
+                            <span class="category-dot" style="background-color: #33FF57;"></span>
+                            <input type="checkbox" class="category-filter" value="nature" checked> Wisata Alam
+                        </label>
+                        <label class="filter-item active" data-category="culture">
+                            <span class="category-dot" style="background-color: #3357FF;"></span>
+                            <input type="checkbox" class="category-filter" value="culture" checked> Wisata Budaya
+                        </label>
+                        <label class="filter-item active" data-category="food">
+                            <span class="category-dot" style="background-color: #F3FF33;"></span>
+                            <input type="checkbox" class="category-filter" value="food" checked> Wisata Kuliner
+                        </label>
+                        <label class="filter-item active" data-category="custom">
+                            <span class="category-dot" style="background-color: #9933FF;"></span>
+                            <input type="checkbox" class="category-filter" value="custom" checked> Lain-lain
+                        </label>
+                    </div>
+                    
+                    <div style="margin-top: 10px">
+                        <button id="clear-filters" style="background-color: #666;">
+                            <i class="fas fa-filter"></i> Clear Filter
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="map-controls">
+                    <div class="control-row">
+                        <label>Map View:</label>
+                        <select id="zoom-level">
+                            <option value="2">World View</option>
+                            <option value="5">Continent View</option>
+                            <option value="8">Country View</option>
+                            <option value="10">Region View</option>
+                            <option value="13">City View</option>
+                            <option value="16">Street View</option>
+                        </select>
+                    </div>
+                    
+                    <div class="zoom-controls">
+                        <button id="zoom-in"><i class="fas fa-plus"></i> Zoom In</button>
+                        <button id="zoom-out"><i class="fas fa-minus"></i> Zoom Out</button>
+                        <button id="reset-view"><i class="fas fa-undo"></i> Reset</button>
+                    </div>
+                </div>
+                
+                <div class="add-marker-section">
+                    <button id="add-marker-btn">
+                        <i class="fas fa-map-marker-alt"></i> Tambah Lokasi Baru
+                    </button>
+                </div>
+                
+                <div class="location-cards" id="location-list">
+                    <!-- Location cards will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+        
+        <button class="toggle-panel">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+    
+    <div class="coordinates-display" id="coordinates-display">
+        Hm? Sepertinya fitur ini belum tersedia.
+    </div>
+    
+    <div class="video-modal" id="video-modal">
+        <div class="video-container">
+            <div class="close-video" id="close-video">&times;</div>
+            <iframe id="video-iframe" allowfullscreen></iframe>
+        </div>
+    </div>
+    <!--
+    <div class="add-location-form" id="add-location-form">
+        <div class="form-container">
+            <div class="form-header">
+                <h2>Add New Location</h2>
+                <div class="close-form" id="close-form">&times;</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="location-name">Location Name:</label>
+                <input type="text" id="location-name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="location-category">Category:</label>
+                <select id="location-category">
+                    <option value="landmark">Landmark</option>
+                    <option value="nature">Nature</option>
+                    <option value="culture">Culture</option>
+                    <option value="food">Food</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="location-description">Description:</label>
+                <textarea id="location-description" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="location-tips">Visit Tips:</label>
+                <textarea id="location-tips"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="location-rating">Rating (1-5):</label>
+                <input type="number" id="location-rating" min="1" max="5" step="0.1" value="5">
+            </div>
+            
+            <div class="form-group">
+                <label for="location-video">Video URL (YouTube or Vimeo):</label>
+                <input type="text" id="location-video" placeholder="https://www.youtube.com/watch?v=...">
+            </div>
+            
+            <div class="form-group">
+                <label>Coordinates:</label>
+                <div id="form-coordinates">Lat: 0, Lng: 0</div>
+            </div>
+            
+            <div class="form-buttons">
+                <button class="cancel-btn" id="cancel-add-location">Cancel</button>
+                <button class="submit-btn" id="submit-location">Add Location</button>
+            </div>
+        </div>
+    </div>
+-->
+    
+    <!-- Leaflet JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    
+    <!-- Marker Cluster JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+    
+    <script>
+        // Global variables
+        let newMarkerLatLng = null;
+        let addMarkerMode = false;
+        let tempMarker = null;
+        
+        // Function to open video modal
+        function openVideoModal(videoUrl) {
+            const videoModal = document.getElementById('video-modal');
+            const videoIframe = document.getElementById('video-iframe');
+            
+            videoIframe.src = videoUrl;
+            videoModal.style.display = 'flex';
+        }
+        
+        // Function to close video modal
+        function closeVideoModal() {
+            const videoModal = document.getElementById('video-modal');
+            const videoIframe = document.getElementById('video-iframe');
+            
+            videoIframe.src = '';
+            videoModal.style.display = 'none';
+        }
+        
+        // Initialize map
+        const map = L.map('map').setView([-7.7334, 110.2503], 14);
+        
+        // Add OpenStreetMap tile layer (default)
+        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+        }).addTo(map);
+        
+        // Add satellite imagery layer option
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+            maxZoom: 19
+        });
+        
+        // Add layer control
+        const baseMaps = {
+            "Street Map": osmLayer,
+            "Satellite": satelliteLayer
+        };
+        
+        L.control.layers(baseMaps, null, {position: 'bottomleft'}).addTo(map);
+        
+        // Add map scale
+        L.control.scale({imperial: true, metric: true, position: 'bottomright'}).addTo(map);
+        
+        // Initialize marker cluster group
+        const markers = L.markerClusterGroup();
+        
+        // Sample locations data with video links
+        const locations = [
+            { 
+                name: "Sub-unit 4",
+                category: "food",
+                description: "Popular food spot with local delicacies and traditional cuisine.",
+                lat: -7.7170438141878925, 
+                lng: 110.24018707976057,
+                image: "/api/placeholder/400/300",
+                rating: 4.4,
+                visitTips: "Busy during lunch hours. Try the local specialties and traditional drinks.",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" // Example YouTube embed URL
+            },
+            {
+                name: "Sub-unit 3",
+                category: "food",
+                description: "Family-friendly restaurant with diverse menu options and beautiful view.",
+                lat: -7.741944,
+                lng: 110.221944,
+                image: "/api/placeholder/400/300",
+                rating: 4.2,
+                visitTips: "Perfect for dinner with great sunset views. Reservation recommended.",
+                videoUrl: "https://www.youtube.com/embed/jNQXAC9IVRw" // Example YouTube embed URL
+            },
+            {
+                name: "Borobudur Temple",
+                category: "culture",
+                description: "Famous Buddhist temple and UNESCO World Heritage site.",
+                lat: -7.6079,
+                lng: 110.2038,
+                image: "/api/placeholder/400/300",
+                rating: 4.8,
+                visitTips: "Visit early morning to avoid crowds and heat. Bring water and wear comfortable shoes.",
+                videoUrl: "https://www.youtube.com/embed/p9LoahhQ8kY" // Example YouTube embed URL
+            },
+            {
+                name: "Prambanan Temple",
+                category: "culture",
+                description: "Hindu temple compound with stunning architecture.",
+                lat: -7.7520,
+                lng: 110.4914,
+                image: "/api/placeholder/400/300",
+                rating: 4.7,
+                visitTips: "Beautiful at sunset. Consider hiring a guide to learn about the history.",
+                videoUrl: "https://www.youtube.com/embed/QTpvXlTlDtQ" // Example YouTube embed URL
+            },
+            {
+                name: "Merapi Mountain",
+                category: "nature",
+                description: "Active volcano offering trekking opportunities and beautiful views.",
+                lat: -7.5407,
+                lng: 110.4460,
+                image: "/api/placeholder/400/300",
+                rating: 4.6,
+                visitTips: "Check volcanic activity before visiting. Best for morning hikes.",
+                videoUrl: "https://www.youtube.com/embed/wUxHHdv-SQA" // Example YouTube embed URL
+            },
+            {
+                name: "Malioboro Street",
+                category: "landmark",
+                description: "Famous shopping street with souvenirs and local products.",
+                lat: -7.7970,
+                lng: 110.3655,
+                image: "/api/placeholder/400/300",
+                rating: 4.5,
+                visitTips: "Visit in the evening when it's more lively. Practice your bargaining skills.",
+                videoUrl: "https://www.youtube.com/embed/1LKhMYdR0SU" // Example YouTube embed URL
+            }
+        ];
+        
+        
+        const categoryColors = {
+            landmark: "#FF5733",
+            nature: "#33FF57",
+            culture: "#3357FF",
+            food: "#F3FF33",
+            custom: "#9933FF"
+        };
+        
+        
+        const categoryIcons = {
+            landmark: "fa-landmark",
+            nature: "fa-tree",
+            culture: "fa-masks-theater",
+            food: "fa-utensils",
+            custom: "fa-map-pin"
+        };
+        
+        // Create markers for each location
+        function addLocationsToMap() {
+            // Clear existing markers
+            markers.clearLayers();
+            
+            // Get selected categories from active filter items
+            const selectedCategories = Array.from(document.querySelectorAll('.filter-item.active'))
+                .map(item => item.getAttribute('data-category'));
+            
+            // Get search query (if any)
+            const searchQuery = document.getElementById('search-input').value.toLowerCase();
+            
+            // Filter locations based on categories and search query
+            const filteredLocations = locations.filter(location => {
+                const matchesCategory = selectedCategories.includes(location.category);
+                const matchesSearch = searchQuery === '' || 
+                    location.name.toLowerCase().includes(searchQuery) || 
+                    location.description.toLowerCase().includes(searchQuery);
+                
+                return matchesCategory && matchesSearch;
+            });
+            
+            // Add markers for filtered locations
+            filteredLocations.forEach(location => {
+                // Create custom icon based on category
+                const icon = L.divIcon({
+                    className: 'marker-icon',
+                    html: `<div style="background-color: ${categoryColors[location.category]}"><i class="fas ${categoryIcons[location.category]}"></i></div>`,
+                    iconSize: [36, 36]
+                });
+                
+                // Create marker with custom icon
+                const marker = L.marker([location.lat, location.lng], {
+                    icon: icon,
+                    category: location.category
+                });
+                
+                // Create popup content with video preview
+                const videoButton = location.videoUrl ? 
+                    `<div class="video-preview" data-video="${location.videoUrl}">
+                        <i class="fas fa-play-circle"></i> Watch Video Preview
+                    </div>` : '';
+                
+                const popupContent = `
+                    <div class="popup-content">
+                        <img src="${location.image}" alt="${location.name}">
+                        <h3>${location.name}</h3>
+                        <p>${location.description}</p>
+                        <p><span class="highlight">Rating:</span> ${location.rating} / 5</p>
+                        <p><span class="highlight">Category:</span> ${location.category.charAt(0).toUpperCase() + location.category.slice(1)}</p>
+                        <p><span class="highlight">Tips:</span> ${location.visitTips}</p>
+                        <p><span class="highlight">Coordinates:</span> ${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}</p>
+                        ${videoButton}
+                    </div>
+                `;
+                
+                // Bind popup to marker
+                marker.bindPopup(popupContent);
+                
+                // Add marker to cluster group
+                markers.addLayer(marker);
+            });
+            
+            // Add markers cluster to map
+            map.addLayer(markers);
+            
+            // Update location cards in sidebar
+            updateLocationCards(filteredLocations);
+        }
+        
+        // Function to update location cards in the sidebar
+        function updateLocationCards(filteredLocations) {
+            const locationList = document.getElementById('location-list');
+            locationList.innerHTML = ''; // Clear existing cards
+            
+            filteredLocations.forEach(location => {
+                const card = document.createElement('div');
+                card.className = 'location-card';
+                card.setAttribute('data-lat', location.lat);
+                card.setAttribute('data-lng', location.lng);
+                
+                const cardHtml = `
+                    <div class="card-image">
+                        <img src="${location.image}" alt="${location.name}">
+                        <div class="card-category" style="background-color: ${categoryColors[location.category]}">
+                            ${location.category.charAt(0).toUpperCase() + location.category.slice(1)}
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3>${location.name}</h3>
+                        <p>${location.description}</p>
+                        <div class="card-rating">
+                            <i class="fas fa-star"></i> ${location.rating} / 5
+                        </div>
+                    </div>
+                `;
+                
+                card.innerHTML = cardHtml;
+                
+                // Add click event to fly to location
+                card.addEventListener('click', () => {
+                    map.flyTo([location.lat, location.lng], 16);
+                    
+                    // Find and open the popup for this marker
+                    markers.eachLayer(marker => {
+                        const markerLatLng = marker.getLatLng();
+                        if (markerLatLng.lat === location.lat && markerLatLng.lng === location.lng) {
+                            marker.openPopup();
+                        }
+                    });
+                });
+                
+                locationList.appendChild(card);
+            });
+        }
+        
+        // Initialize map with locations
+        addLocationsToMap();
+        
+        // Toggle sidebar panel
+        const togglePanel = document.querySelector('.toggle-panel');
+        const sidePanel = document.querySelector('.side-panel');
+        
+        togglePanel.addEventListener('click', () => {
+            sidePanel.classList.toggle('collapsed');
+            togglePanel.classList.toggle('collapsed');
+            
+            // Update toggle icon
+            const toggleIcon = togglePanel.querySelector('i');
+            if (sidePanel.classList.contains('collapsed')) {
+                toggleIcon.className = 'fas fa-chevron-left';
+            } else {
+                toggleIcon.className = 'fas fa-chevron-right';
+            }
+        });
+        
+        // Event listeners for category filters
+        const filterItems = document.querySelectorAll('.filter-item');
+        filterItems.forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active');
+                const checkbox = item.querySelector('input');
+                checkbox.checked = item.classList.contains('active');
+                addLocationsToMap(); // Update map with filtered locations
+            });
+        });
+        
+        // Event listener for clear filters button
+        document.getElementById('clear-filters').addEventListener('click', () => {
+            filterItems.forEach(item => {
+                item.classList.add('active');
+                const checkbox = item.querySelector('input');
+                checkbox.checked = true;
+            });
+            document.getElementById('search-input').value = '';
+            addLocationsToMap();
+        });
+        
+        // Event listener for search input
+        document.getElementById('search-input').addEventListener('input', () => {
+            addLocationsToMap();
+        });
+        
+        // Event listeners for zoom controls
+        document.getElementById('zoom-in').addEventListener('click', () => {
+            map.zoomIn();
+        });
+        
+        document.getElementById('zoom-out').addEventListener('click', () => {
+            map.zoomOut();
+        });
+        
+        document.getElementById('reset-view').addEventListener('click', () => {
+            map.setView([-7.7334, 110.2503], 14);
+        });
+        
+        // event listener for zoom level dropdown
+        document.getElementById('zoom-level').addEventListener('change', function() {
+            const zoomLevel = parseInt(this.value);
+            map.setZoom(zoomLevel);
+        });
+        
+        // Update coordinates display when clicking on map. shit is incomplete
+        map.on('click', function(e) {
+            const latlng = e.latlng;
+            const display = document.getElementById('coordinates-display');
+            
+            display.innerHTML = `Latitude: ${latlng.lat.toFixed(6)}, Longitude: ${latlng.lng.toFixed(6)}`;
+            display.classList.remove('hidden');
+            
+            // If in add marker mode, set new marker position
+            if (addMarkerMode) {
+                newMarkerLatLng = latlng;
+                
+                // Update form coordinates
+                document.getElementById('form-coordinates').innerHTML = 
+                    `Lat: ${latlng.lat.toFixed(6)}, Lng: ${latlng.lng.toFixed(6)}`;
+                
+                // Remove previous temporary marker if exists
+                if (tempMarker) {
+                    map.removeLayer(tempMarker);
+                }
+                
+                // Add temporary marker
+                tempMarker = L.marker(latlng).addTo(map);
+                
+                // Show form
+                document.getElementById('add-location-form').style.display = 'flex';
+            }
+        });
+        
+        // Event listener for add marker button
+        document.getElementById('add-marker-btn').addEventListener('click', function() {
+            addMarkerMode = !addMarkerMode;
+            
+            // Toggle button state
+            if (addMarkerMode) {
+                this.classList.add('active');
+                this.innerHTML = '<i class="fas fa-map-marker-alt"></i> Click on Map to Add Location';
+            } else {
+                this.classList.remove('active');
+                this.innerHTML = '<i class="fas fa-map-marker-alt"></i> Add New Location';
+                
+                // Remove temporary marker if exists
+                if (tempMarker) {
+                    map.removeLayer(tempMarker);
+                    tempMarker = null;
+                }
+            }
+        });
+        
+        // Event listeners for location form
+        document.getElementById('close-form').addEventListener('click', () => {
+            document.getElementById('add-location-form').style.display = 'none';
+            
+            // Remove temporary marker
+            if (tempMarker) {
+                map.removeLayer(tempMarker);
+                tempMarker = null;
+            }
+            
+            // Reset add marker mode
+            addMarkerMode = false;
+            document.getElementById('add-marker-btn').classList.remove('active');
+            document.getElementById('add-marker-btn').innerHTML = 
+                '<i class="fas fa-map-marker-alt"></i> Add New Location';
+        });
+        
+        document.getElementById('cancel-add-location').addEventListener('click', () => {
+            document.getElementById('add-location-form').style.display = 'none';
+            
+            // Remove temporary marker
+            if (tempMarker) {
+                map.removeLayer(tempMarker);
+                tempMarker = null;
+            }
+            
+            // Reset add marker mode
+            addMarkerMode = false;
+            document.getElementById('add-marker-btn').classList.remove('active');
+            document.getElementById('add-marker-btn').innerHTML = 
+                '<i class="fas fa-map-marker-alt"></i> Add New Location';
+        });
+        
+        // Submit new location
+        document.getElementById('submit-location').addEventListener('click', () => {
+            if (!newMarkerLatLng) {
+                alert('Please select a location on the map first.');
+                return;
+            }
+            
+            const locationName = document.getElementById('location-name').value;
+            const locationCategory = document.getElementById('location-category').value;
+            const locationDescription = document.getElementById('location-description').value;
+            const locationTips = document.getElementById('location-tips').value;
+            const locationRating = document.getElementById('location-rating').value;
+            const locationVideo = document.getElementById('location-video').value;
+            
+            if (!locationName || !locationDescription) {
+                alert('Please enter at least a name and description for the location.');
+                return;
+            }
+            
+            // Create YouTube embed URL if provided
+            let videoUrl = '';
+            if (locationVideo) {
+                // Handle YouTube URLs
+                if (locationVideo.includes('youtube.com/watch?v=')) {
+                    const videoId = locationVideo.split('v=')[1].split('&')[0];
+                    videoUrl = `https://www.youtube.com/embed/${videoId}`;
+                } 
+                // Handle YouTube short URLs
+                else if (locationVideo.includes('youtu.be/')) {
+                    const videoId = locationVideo.split('youtu.be/')[1];
+                    videoUrl = `https://www.youtube.com/embed/${videoId}`;
+                }
+                // Handle Vimeo URLs 
+                else if (locationVideo.includes('vimeo.com/')) {
+                    const videoId = locationVideo.split('vimeo.com/')[1];
+                    videoUrl = `https://player.vimeo.com/video/${videoId}`;
+                }
+                // If URL doesn't match known patterns, use as is
+                else {
+                    videoUrl = locationVideo;
+                }
+            }
+            
+            // Create new location object
+            const newLocation = {
+                name: locationName,
+                category: locationCategory,
+                description: locationDescription,
+                lat: newMarkerLatLng.lat,
+                lng: newMarkerLatLng.lng,
+                image: "/api/placeholder/400/300", // Default placeholder image
+                rating: parseFloat(locationRating),
+                visitTips: locationTips || "No specific tips available.",
+                videoUrl: videoUrl
+            };
+            
+            // Add new location to the array
+            locations.push(newLocation);
+            
+            // Reset form and UI
+            document.getElementById('add-location-form').style.display = 'none';
+            document.getElementById('location-name').value = '';
+            document.getElementById('location-description').value = '';
+            document.getElementById('location-tips').value = '';
+            document.getElementById('location-rating').value = '5';
+            document.getElementById('location-video').value = '';
+            
+            // Remove temporary marker
+            if (tempMarker) {
+                map.removeLayer(tempMarker);
+                tempMarker = null;
+            }
+            
+            // Reset add marker mode
+            addMarkerMode = false;
+            document.getElementById('add-marker-btn').classList.remove('active');
+            document.getElementById('add-marker-btn').innerHTML = 
+                '<i class="fas fa-map-marker-alt"></i> Add New Location';
+            
+            // Update map with new location
+            addLocationsToMap();
+            
+            // Show success message
+            alert('New location added successfully!');
+        });
+        
+        // Event delegation for video preview clicks
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.video-preview')) {
+                const videoPreview = e.target.closest('.video-preview');
+                const videoUrl = videoPreview.getAttribute('data-video');
+                openVideoModal(videoUrl);
+            }
+        });
+        
+        // Close video modal
+        document.getElementById('close-video').addEventListener('click', closeVideoModal);
+        
+        // Close video modal when clicking outside
+        document.getElementById('video-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeVideoModal();
+            }
+        });
+        
+        // Add additional features - Local storage for saving user added locations
+        function saveLocationsToLocalStorage() {
+            localStorage.setItem('travelMapLocations', JSON.stringify(locations));
+        }
+        
+        function loadLocationsFromLocalStorage() {
+            const savedLocations = localStorage.getItem('travelMapLocations');
+            if (savedLocations) {
+                locations.length = 0; // Clear current locations
+                const parsedLocations = JSON.parse(savedLocations);
+                parsedLocations.forEach(location => locations.push(location));
+                addLocationsToMap();
+            }
+        }
+        
+        // Add export/import functionality
+        function exportLocationsToJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(locations));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "travel_map_locations.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+        
+        function importLocationsFromJSON(jsonFile) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedLocations = JSON.parse(e.target.result);
+                    if (Array.isArray(importedLocations)) {
+                        // Replace or merge with current locations
+                        if (confirm('Replace existing locations with imported data?')) {
+                            locations.length = 0; // Clear current locations
+                            importedLocations.forEach(location => locations.push(location));
+                        } else {
+                            importedLocations.forEach(location => locations.push(location));
+                        }
+                        addLocationsToMap();
+                        saveLocationsToLocalStorage();
+                        alert('Locations imported successfully!');
+                    } else {
+                        alert('Invalid data format. Expected an array of locations.');
+                    }
+                } catch (error) {
+                    alert('Error parsing JSON file: ' + error.message);
+                }
+            };
+            reader.readAsText(jsonFile);
+        }
+        
+        // Call local storage load on page initialization
+        loadLocationsFromLocalStorage();
+        
+        // Save locations when window is closed
+        window.addEventListener('beforeunload', saveLocationsToLocalStorage);
+    </script>
+</body>
+</html>

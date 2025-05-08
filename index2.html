@@ -559,23 +559,23 @@
                     <label class="filter-label">Filter berdasar kategori: </label>
                     <div class="filter-items">
                         <label class="filter-item active" data-category="landmark">
-                            <span class="category-dot" style="background-color: #FF5733;"></span>
+                            <span class="category-dot" style="background-color: #b52a0b;"></span>
                             <input type="checkbox" class="category-filter" value="landmark" checked> Landmark
                         </label>
                         <label class="filter-item active" data-category="nature">
-                            <span class="category-dot" style="background-color: #33FF57;"></span>
+                            <span class="category-dot" style="background-color: #209235;"></span>
                             <input type="checkbox" class="category-filter" value="nature" checked> Wisata Alam
                         </label>
                         <label class="filter-item active" data-category="culture">
-                            <span class="category-dot" style="background-color: #3357FF;"></span>
+                            <span class="category-dot" style="background-color: #1530ac;"></span>
                             <input type="checkbox" class="category-filter" value="culture" checked> Wisata Budaya
                         </label>
                         <label class="filter-item active" data-category="food">
-                            <span class="category-dot" style="background-color: #F3FF33;"></span>
+                            <span class="category-dot" style="background-color: #b1ba2f;"></span>
                             <input type="checkbox" class="category-filter" value="food" checked> Wisata Kuliner
                         </label>
                         <label class="filter-item active" data-category="custom">
-                            <span class="category-dot" style="background-color: #9933FF;"></span>
+                            <span class="category-dot" style="background-color: #802ed3;"></span>
                             <input type="checkbox" class="category-filter" value="custom" checked> Lain-lain
                         </label>
                     </div>
@@ -752,81 +752,206 @@
         
         // Sample locations data with video links
         const locations = [
-            { 
-                name: "Sub-unit 4",
-                category: "food",
-                description: "Popular food spot with local delicacies and traditional cuisine.",
-                lat: -7.7170438141878925, 
-                lng: 110.24018707976057,
-                image: "/api/placeholder/400/300",
-                rating: 4.4,
-                visitTips: "Busy during lunch hours. Try the local specialties and traditional drinks.",
-                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" // Example YouTube embed URL
-            },
-            {
-                name: "Sub-unit 3",
-                category: "food",
-                description: "Family-friendly restaurant with diverse menu options and beautiful view.",
-                lat: -7.741944,
-                lng: 110.221944,
-                image: "/api/placeholder/400/300",
-                rating: 4.2,
-                visitTips: "Perfect for dinner with great sunset views. Reservation recommended.",
-                videoUrl: "https://www.youtube.com/embed/jNQXAC9IVRw" // Example YouTube embed URL
-            },
-            {
-                name: "Borobudur Temple",
-                category: "culture",
-                description: "Famous Buddhist temple and UNESCO World Heritage site.",
-                lat: -7.6079,
-                lng: 110.2038,
-                image: "/api/placeholder/400/300",
-                rating: 4.8,
-                visitTips: "Visit early morning to avoid crowds and heat. Bring water and wear comfortable shoes.",
-                videoUrl: "https://www.youtube.com/embed/p9LoahhQ8kY" // Example YouTube embed URL
-            },
-            {
-                name: "Prambanan Temple",
-                category: "culture",
-                description: "Hindu temple compound with stunning architecture.",
-                lat: -7.7520,
-                lng: 110.4914,
-                image: "/api/placeholder/400/300",
-                rating: 4.7,
-                visitTips: "Beautiful at sunset. Consider hiring a guide to learn about the history.",
-                videoUrl: "https://www.youtube.com/embed/QTpvXlTlDtQ" // Example YouTube embed URL
-            },
-            {
-                name: "Merapi Mountain",
+        {
+                name: "Peternakan Domba BUMDes Sendangsari",
                 category: "nature",
-                description: "Active volcano offering trekking opportunities and beautiful views.",
-                lat: -7.5407,
-                lng: 110.4460,
-                image: "/api/placeholder/400/300",
-                rating: 4.6,
-                visitTips: "Check volcanic activity before visiting. Best for morning hikes.",
-                videoUrl: "https://www.youtube.com/embed/wUxHHdv-SQA" // Example YouTube embed URL
+                description: "Merupakan sebuah peternakan kambing milik kalurahan Sendangsari yang akan dikembangkan lanjut untuk menjadi salah satu potensi desa Sendangsari",
+                address: "Gatak, Sendangsari, Minggir, Sleman Regency, Special Region of Yogyakarta 55562",
+                lat: -7.709406571732028,
+                lng: 110.256574,
+                image: "images/bumdes.jpeg",
+                visitTips: "Belum dibuka untuk umum, pastikan perizinan lengkap ya!",
+                videoUrl: "-" // Example YouTube embed URL
             },
             {
-                name: "Malioboro Street",
-                category: "landmark",
-                description: "Famous shopping street with souvenirs and local products.",
-                lat: -7.7970,
-                lng: 110.3655,
-                image: "/api/placeholder/400/300",
+                name: "Deriji Craft",
+                category: "culture",
+                description: "Kerajinan mendong sejak tahun 2009 dari Plembon, Kalurahan Sendangsari",
+                address: "76PX+59M, Padukuhan Plembon,, Plembon, Sendangsari, Kec. Minggir, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55562",
+                lat: -7.714349752827013, 
+                lng: 110.24852235590566,
+                image: "images/deriji.png",
+                rating: 4.6,
+                visitTips: "Totebagnya cantik, jangan lupa dibeli untuk dukung UMKM!",
+                videoUrl: "-" // Example YouTube embed URL
+            },
+            {
+                name: "Anyaman Besek",
+                category: "culture",
+                description: "Anyaman tradisional yang dibuat secara manual oleh sekelompok ibu-ibu di rumah, memanfaatkan kearifan lokal dalam setiap anyamannya. Besek ini tak hanya berfungsi sebagai wadah makanan, tetapi juga mencerminkan nilai budaya dan keindahan estetika khas Indonesia yang sarat makna.",
+                address: "Bandan, Sendangsari, Minggir, Sleman Regency, Special Region of Yogyakarta 55562",
+                lat: -7.712371580518698, 
+                lng: 110.2545294412846,
+                image: "images/besek.jpeg",
+                rating: 4.9,
+                visitTips: "Kunjungi saat pagi atau siang hari agar dapat melihat proses anyaman secara langsung.",
+                videoUrl: "-"
+            },
+            {
+                name: "Mochi dan Wingko Bu Ika",
+                category: "food",
+                description: "Makanan olahan yang terbuat dari tepung beras ketan,kelapa muda, dan gula. Diproduksi di salah satu rumah warga Jomboran, Kelurahan Sendangagung.",
+                address: "7659+QFQ, Tegalsari, Jomboran, RT./03/RW./34, Jomboran, Sendangagung, Kec. Minggir, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55562",
+                lat: -7.739862713336016, 
+                lng: 110.21873196668757,
+                image: "images/wingkoika.png",
+                rating: 5,
+                visitTips: "Sebaiknya pesan terlebih dahulu karena produksi dilakukan terbatas di rumah warga.",
+                videoUrl: "-"
+            },
+            {
+                name: "Kerajinan Bambu",
+                category: "culture",
+                description: "Seni kerajinan tradisional dari anyaman bambu yang telah mendukung perekonomian sebagian masyarakat di Kelurahan Sendangagung. Di padukuhan Brajan, ini menjadi salah satu mata pencaharian utama dan telah berkembang menjadi Desa Wisata penghasil kerajinan",
+                address: "769M+8VX, Brajan, RT.01/RW.17, Plombangan, Sendangagung, Kec. Minggir, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55562",
+                lat: -7.73363851562155, 
+                lng: 110.23368882000571,
+                image: "images/bambu.jpg",
+                rating: 4.9,
+                visitTips: "Datanglah bersama kelompok agar bisa melihat proses pembuatan sekaligus membeli langsung dari pengrajin.",
+                videoUrl: "-"
+            },
+            {
+                name: "Warung Bakmi Seleraku Pak Sukis",
+                category: "food",
+                description: "Warung makan Bakmi godok yang terletak di padukuhan minggir 3, kelurahan Sendangagung. Proses masaknya masih menggunakan cara tradisional, yaitu mie dimasak dengan menggunakan arang.",
+                address: "76JR+VGJ, Minggir, Sendangagung, Kec. Minggir, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55562",
+                lat: -7.717651109470254, 
+                lng: 110.2414527857697,
+                image: "images/bakmisukis.png",
                 rating: 4.5,
-                visitTips: "Visit in the evening when it's more lively. Practice your bargaining skills.",
-                videoUrl: "https://www.youtube.com/embed/1LKhMYdR0SU" // Example YouTube embed URL
+                visitTips: "Waktu terbaik berkunjung adalah malam hari untuk merasakan suasana tradisional dan aroma arang.",
+                videoUrl: "-"
+            },
+            {
+                name: "Warung Makanan Tradisional Geblek",
+                category: "food",
+                description: "Warung makan yang menjual makanan tradisional Geblek. Berasal dari daerah Kulonprogo, Purworejo, dan Wonosobo. Geblek terbuat dari tepung tapioka yang digoreng dengan bentuk angka delapan.",
+                address: "76MW+GV6, Jl. Kebon Agung, Baran, Sendangagung, Kec. Minggir, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55562",
+                lat: -7.7162530, 
+                lng: 110.2471593,
+                image: "images/geblek.png",
+                rating: 4.9,
+                visitTips: "Cocok untuk camilan sore hari, jangan lupa mencoba dengan sambal khas setempat.",
+                videoUrl: "-"
+            },
+            {
+                name: "Omah Minggir",
+                category: "food",
+                description: "Kafe berkonsep tradisional yang menawarkan suasana tenang dengan pemandangan sawah, cocok untuk menikmati hidangan lokal sambil bersantai di pedesaan.",
+                address: "Ngaranan, Sendangrejo, Minggir, Sleman Regency, Special Region of Yogyakarta 55562",
+                lat: -7.727804713909959, 
+                lng: 110.26385791144516,
+                image: "images/oming.png",
+                rating: 4.7,
+                visitTips: "Ideal untuk bersantai sore hari dengan pemandangan sawah yang menenangkan.",
+                videoUrl: "-"
+            },
+            {
+                name: "Gubug Makan Mang Engking Pusat",
+                category: "food",
+                description: "Restoran bernuansa pedesaan dengan saung-saung bambu di atas kolam, menyajikan hidangan khas Sunda seperti udang bakar madu dan gurame, cocok untuk makan bersama keluarga dalam suasana alami.",
+                address: "Jl. Gedongan-Tempel, Jamur, Sendangrejo, Kec. Minggir, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55562",
+                lat: -7.720732744508779, 
+                lng: 110.26587359360549,
+                image: "images/mang.png",
+                rating: 4.6,
+                visitTips: "Reservasi sangat disarankan pada akhir pekan karena tempat ini cukup ramai.",
+                videoUrl: "-"
+            },
+            {
+                name: "Bakso Panjang & Mie Ayam Tresno Roso",
+                category: "food",
+                description: "Warung bakso dan mie ayam dengan ciri khas unik yaitu bakso berbentuk panjang menyerupai lontong, memberikan pengalaman kuliner yang berbeda.",
+                address: "77M8+CWF, Jl. Kebon Agung, RT.01/RW.08, Ngepringan 4, Sendangrejo, Kec. Minggir, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55561",
+                lat: -7.716244321951379, 
+                lng: 110.2673273117243,
+                image: "images/bakso.png",
+                rating: 4.3,
+                visitTips: "Coba bakso panjang khasnya dan datang di luar jam makan siang untuk menghindari antrean.",
+                videoUrl: "-"
+            },
+            {
+                name: "Himari Handycraft",
+                category: "culture",
+                description: "Pengrajin produk mendong yang cukup terkenal, berlokasi di Parakan Kulon, Sengdangsari. Menghadirkan kerajinan tangan khas dengan sentuhan kreatif dan nilai tradisional.",
+                address: "77Q4+CM5, Parakan Kulon, Sendangsari, Kec. Minggir, Yogyakarta, Daerah Istimewa Yogyakarta 55562",
+                lat: -7.711343678774689, 
+                lng: 110.25665462336198,
+                image: "images/himari.png",
+                rating: 4.0,
+                visitTips: "Kunjungi saat hari kerja untuk melihat proses produksi mendong lebih leluasa.",
+                videoUrl: "-"
+            },
+            {
+                name: "Wingko Timik",
+                category: "food",
+                description: "Tempat produksi rumahan yang mengolah wingko, camilan tradisional berbahan dasar kelapa, dengan cita rasa autentik khas Jawa.",
+                address: "76FP+P4G, Jl. Kebon Agung, Plombangan, Sendangagung, Kec. Minggir, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55562",
+                lat: -7.7256618454790855, 
+                lng: 110.23531861835447,
+                image: "images/timik.jpeg",
+                rating: 4.8,
+                visitTips: "Ideal dibeli sebagai oleh-oleh, pastikan datang pagi agar masih tersedia.",
+                videoUrl: "-"
+            },
+            {
+                name: "Balai Budaya",
+                category: "culture",
+                description: "Merupakan tempat yang menjadi sarana masyarakat kelurahan Sendangagung untuk memelihara kebudayaan dan mengembangkan inovasi dan kreatifitas masyarakat terkait kebudayaan.",
+                address: "76GJ+5PJ, Babadan, Sendangagung, Kec. Minggir, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55562",
+                lat: -7.724402383031126,
+                lng: 110.23176132521576,
+                image: "images/balai.jpeg",
+                rating: 4.3,
+                visitTips: "Cek jadwal kegiatan budaya atau latihan seni sebelum berkunjung agar pengalaman lebih maksimal.",
+                videoUrl: "-"
+            },
+            {
+                name: "Resto Unagi dan Udang Alam Kreo",
+                category: "food",
+                description: "Merupakan resto yang menyajikan sajian kuliner dengn menu cukup langka seperti unagi dan udang gajah. Selain itu, letak restoran yang berada di samping sungai Progo ini juga menawarkan pemandangan yang cantik saat kita menikmati makanan secara langsung",
+                address: "76GH+4G7, Jl. Raya Banjararum, Kliran, Sendangagung, Kec. Minggir, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55562",
+                lat: -7.723849545559826, 
+                lng: 110.23123561223987,
+                image: "images/unagi.png",
+                rating: 4.7,
+                visitTips: "Datang sore menjelang senja untuk menikmati hidangan sambil menikmati pemandangan sungai.",
+                videoUrl: "-"
+            },
+            {
+                name: "Sategedhe Pasar Minggir",
+                category: "food",
+                description: "Merupakan sebuah resto khas yang terletak di kawasan Pasar Minggir, Sleman, Yogyakarta. Tempat ini terkenal dengan porsi satenya yang besar (gedhe) dan cita rasa khas tradisional. Dengan suasana sederhana dan hangat khas pedesaan, Sate Gedhe menyajikan pilihan menu premium seperti sate menjangan, sate kambing, dan sate daging sapi. Cocok untuk pecinta kuliner lokal yang ingin menikmati hidangan autentik Jogja dengan sentuhan pedesaan.",
+                address: "Plombangan, Sendangagung, Minggir, Sleman Regency, Special Region of Yogyakarta 55562",
+                lat: -7.732263041516817, 
+                lng: 110.24360306939703,
+                image: "images/sate.png",
+                rating: 4.9,
+                visitTips: "Sate cepat habis, jadi datang lebih awal di pagi hari atau menjelang makan siang.",
+                videoUrl: "-"
+            },
+            {
+                name: "Sweet Garden",
+                category: "nature",
+                description: "Hutan Rakyat pola Agroforestry, Pengolahan pupuk organik, Perikanan dan Jasa Lingkungan",
+                address: "76JJ+JXJ, Babadan, Sendangagung, Kec. Minggir, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55562",
+                lat: -7.718399,
+                lng: 110.232407,
+                image: "images/sweet.png",
+                rating: 4.6,
+                visitTips: "Kenakan alas kaki yang nyaman, karena tempat ini cocok untuk eksplorasi alam dan edukasi lingkungan.",
+                videoUrl: "-"
             }
         ];
         
         
         const categoryColors = {
-            landmark: "#FF5733",
-            nature: "#33FF57",
-            culture: "#3357FF",
-            food: "#F3FF33",
-            custom: "#9933FF"
+            landmark: "#b52a0b",
+            nature: "#209235",
+            culture: "#1530ac",
+            food: "#b1ba2f",
+            custom: "#802ed3"
         };
         
         
@@ -886,6 +1011,7 @@
                         <img src="${location.image}" alt="${location.name}">
                         <h3>${location.name}</h3>
                         <p>${location.description}</p>
+                        <p><span class="highlight">Address:</span> ${location.address}</p>
                         <p><span class="highlight">Rating:</span> ${location.rating} / 5</p>
                         <p><span class="highlight">Category:</span> ${location.category.charAt(0).toUpperCase() + location.category.slice(1)}</p>
                         <p><span class="highlight">Tips:</span> ${location.visitTips}</p>
@@ -1112,6 +1238,7 @@
             const locationName = document.getElementById('location-name').value;
             const locationCategory = document.getElementById('location-category').value;
             const locationDescription = document.getElementById('location-description').value;
+            const locationAddress = document.getElementById('location-address').value;
             const locationTips = document.getElementById('location-tips').value;
             const locationRating = document.getElementById('location-rating').value;
             const locationVideo = document.getElementById('location-video').value;
@@ -1150,6 +1277,7 @@
                 name: locationName,
                 category: locationCategory,
                 description: locationDescription,
+                address: locationAddress,
                 lat: newMarkerLatLng.lat,
                 lng: newMarkerLatLng.lng,
                 image: "/api/placeholder/400/300", // Default placeholder image
@@ -1165,6 +1293,7 @@
             document.getElementById('add-location-form').style.display = 'none';
             document.getElementById('location-name').value = '';
             document.getElementById('location-description').value = '';
+            document.getElementById('location-address').value = '';
             document.getElementById('location-tips').value = '';
             document.getElementById('location-rating').value = '5';
             document.getElementById('location-video').value = '';

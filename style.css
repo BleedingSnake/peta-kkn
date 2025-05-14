@@ -121,7 +121,7 @@ body {
 }
 
 .filter-item input {
-    display: none;
+    display: flex;
 }
 
 .filter-item.active {
